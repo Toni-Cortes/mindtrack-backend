@@ -11,7 +11,7 @@ const entrySchema = new Schema({
     dislikes: { type: String, default: ''}, 
     state: { 
       type: String, 
-      enum: ['very sad', 'sad', 'neutral', 'happy', 'very happy'], 
+      enum: ['Happy', 'Sad', 'Angry', 'Calm'], 
       required: true 
     }, 
     diet: { type: String } 

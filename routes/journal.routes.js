@@ -1,6 +1,29 @@
 const router = require("express").Router();
 const Journal = require("../models/Journal.model");
 const Entry = require("../models/Entry.model");
+const Patient = require("../models/Patient.model");
+
+
+
+
+router.get('/entries/:username', async (req, res, next) => {
+    const { username } = req.params;
+    try {
+      const user = await Patient.findOne({ username }).populate('journal');
+      if (!user || !user.journal) {
+        return res.status(404).json({ message: 'User or journal not found' });
+      }
+      const entries = await Entry.find({ journal: user.journal._id });
+      res.status(200).json({ entries });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+
+
+
+
 
 
 router.get("/:patientId", async (req, res, next) => {
