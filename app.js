@@ -21,7 +21,7 @@ const therapistRoutes = require("./routes/therapists.routes");
 const journalRoutes = require("./routes/journal.routes");
 const entryRoutes = require("./routes/entry.routes");
 const authRoutes = require('./routes/auth.routes')
-
+const appointmentsRoutes = require('./routes/appointments.routes')
 
 app.use("/api/patients", patientRoutes);
 app.use("/api/therapists", therapistRoutes);
@@ -29,6 +29,6 @@ app.use("/api/journals", journalRoutes);
 app.use("/api/entries", entryRoutes);
 app.use('/api/auth', authRoutes)
 
-
+app.use('/api/appointments', appointmentsRoutes)
 
 module.exports = app;

@@ -19,8 +19,9 @@ const isAuthenticated = (req, res, next) => {
 
   try {
     const payload = jwt.verify(token, JWT_SECRET);
-    req.payload = payload; 
-    next(); 
+    req.payload = payload;  // Attach the decoded payload to the request
+    req.user = { id: payload.id }; // Directly store the user's ID for easy access
+    next();
   } catch (error) {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }

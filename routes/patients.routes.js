@@ -97,22 +97,37 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:patientId', async (req, res, next) => {
   try {
-      const { patientId } = req.params;
-      const patient = await Patient.findById(patientId)
-          .populate({
-              path: 'journal',
-              populate: { path: 'entries' } // Populate entries within the journal
-          })
-          .populate('toDo');
+    const { patientId } = req.params;
+    const patient = await Patient.findById(patientId)
+    .populate('therapist', 'username')
+    .populate({
+      path: 'journal',
+      populate: {
+        path: 'entries',
+        model: 'Entry', // Ensure this points to the correct schema
+        options: { sort: { date: -1 } },
+      },
+    })
+    .populate({
+      path: 'toDo',
+      model: 'Task', // Ensure tasks are fetched correctly
+    });
 
-      if (!patient) {
-          return res.status(404).json({ message: 'Patient not found' });
-      }
+    if (!patient) {
+      return res.status(404).json({ message: 'Patient not found' });
+    }
 
-      res.json(patient);
+    const lastEntryDate = patient.journal.entries.length > 0 
+      ? patient.journal.entries[0].date 
+      : null;
+
+    res.json({ 
+      patient, 
+      lastEntryDate 
+    });
   } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Something went wrong', error });
+    console.error(error);
+    res.status(500).json({ message: 'Something went wrong', error });
   }
 });
 
